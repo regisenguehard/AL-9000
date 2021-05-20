@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>AL 9000</title>
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+	<header>
+		<h1>AL 9000</h1>
+		<div class="hamburger" id="hamburger">
+			<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="bars" class="svg-inline--fa fa-bars fa-w-14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"></path></svg>
+		</div>
+		<div id="score"></div>
+	</header>
+	<nav id="nav">
+		<ul>
+			<li><a href="#prenom">Prénom</a></li>
+			<li><a href="#ecrireLire">Écrire</a></li>
+			<li><a href="#alphabet">Alphabet</a></li>
+			<li><a href="#clavier">Clavier</a></li>
+			<li><a href="#animaux">Lecture animaux</a></li>
+			<li><a href="#chercheAnimal">Animaux</a></li>
+			<li><a href="#chercheLeLegume">Légumes</a></li>
+		</ul>
+	</nav>
+
+	<div id="prenom" class="view">
+		<h2>Indique ton prénom et click sur enregistrer</h2>
+		<form>
+			<input type="text" name="prenom" id="lePrenom" autocomplete="off">
+			<input type="submit" value="Enregistrer" id="enregistrer">
+		</form>
+	</div>
+
+	<div id="ecrireLire" class="view">
+		<h2>Écrit un mot et click sur lire</h2>
+		<form>
+			<input type="text" name="mot" id="mot" autocomplete="off">
+			<input type="submit" value="lire" id="lire">
+		</form>
+	</div>
+
+	<div id="alphabet" class="view">
+		<h2>Alphabet</h2>
+		<ul id="alphabetBox">
+			<li class="box" data-lettre="box-a">a</li>
+			<li class="box" data-lettre="box-b">b</li>
+			<li class="box" data-lettre="box-c">c</li>
+			<li class="box" data-lettre="box-d">d</li>
+			<li class="box" data-lettre="box-e">e</li>
+			<li class="box" data-lettre="box-f">f</li>
+			<li class="box" data-lettre="box-g">g</li>
+			<li class="box" data-lettre="box-h">h</li>
+			<li class="box" data-lettre="box-i">i</li>
+			<li class="box" data-lettre="box-j">j</li>
+			<li class="box" data-lettre="box-k">k</li>
+			<li class="box" data-lettre="box-l">l</li>
+			<li class="box" data-lettre="box-m">m</li>
+			<li class="box" data-lettre="box-n">n</li>
+			<li class="box" data-lettre="box-o">o</li>
+			<li class="box" data-lettre="box-p">p</li>
+			<li class="box" data-lettre="box-q">q</li>
+			<li class="box" data-lettre="box-r">r</li>
+			<li class="box" data-lettre="box-s">s</li>
+			<li class="box" data-lettre="box-t">t</li>
+			<li class="box" data-lettre="box-u">u</li>
+			<li class="box" data-lettre="box-v">v</li>
+			<li class="box" data-lettre="box-w">w</li>
+			<li class="box" data-lettre="box-x">x</li>
+			<li class="box" data-lettre="box-y">y</li>
+			<li class="box" data-lettre="box-z">z</li>
+		</ul>
+	</div>
+
+	<div id="clavier" class="view">
+		<h2>Clavier</h2>
+		<p><em>Tape sur une touche du clavier pour l'entendre</em></p>
+		<div class="box"> </div>
+	</div>
+
+	<div id="animaux" class="view imageGrid">
+		<h2>Animaux</h2>
+		<div class="theBox animauxBox animauxBox1"></div>
+	</div>
+
+	<div id="chercheAnimal" class="view imageGrid">
+		<h2>Trouve l'animal</h2>
+		<div class="theBox animauxBox animauxBox2"></div>
+	</div>
+
+	<div id="chercheLeLegume" class="view imageGrid">
+		<h2>Trouve le légume</h2>
+		<div class="theBox legumeBox legumeBox2"></div>
+	</div>
+
+	<div id="copyright"><a href="https://enguehard.info" target="_blank">© Régis Enguehard</a><span id="lang"></span></div>
+	<script src="app.js" defer></script>
+</body>
+</html>
