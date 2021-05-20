@@ -235,26 +235,9 @@ animauxBoxContent.forEach((element, index) => {
 let animauxBox2 = document.querySelector('.animauxBox2');
 let chercheAnimalTitre = document.querySelector('#chercheAnimal h2');
 
-function initJeuAnimal() {
-	animauxBoxContent = shuffle(animauxBoxContent);
-	animauxBoxContent.forEach((element, index) => {
-		let box = document.createElement("li", {'class': 'box'+index});
-		let image = document.createElement("img", {'src': element.image});
-		image.setAttribute("src", 'images/' + element.image);
-		image.setAttribute("alt", element.voice);
-		let bi = box.appendChild(image);
-
-		d = animauxBox2.appendChild(box);
-		d.classList.add('box', 'box-'+index, 'clickable');
-		d.dataset.sexe = element.sexe;
-		d.dataset.voice = element.voice;
-		d.dataset.id = index;
-	});
-}
-
 function trouveAnimal() {
 	animauxBox2.innerHTML = '';
-	initJeuAnimal();
+	initJeu(animauxBoxContent, animauxBox2);
 	let solution = getRandomInt(animauxBoxContent.length);
 	let nomAnimalCapitalized = animauxBoxContent[solution].voice.charAt(0).toUpperCase() + animauxBoxContent[solution].voice.slice(1)
 	chercheAnimalTitre.innerText = nomAnimalCapitalized;
@@ -285,7 +268,22 @@ function trouveAnimal() {
 }
 
 
+function initJeu(tableau, cibleHtml) {
+	tableau = shuffle(tableau);
+	tableau.forEach((element, index) => {
+		let box = document.createElement("li", {'class': 'box'+index});
+		let image = document.createElement("img", {'src': element.image});
+		image.setAttribute("src", 'images/' + element.image);
+		image.setAttribute("alt", element.voice);
+		let bi = box.appendChild(image);
 
+		d = cibleHtml.appendChild(box);
+		d.classList.add('box', 'box-'+index, 'clickable');
+		d.dataset.sexe = element.sexe;
+		d.dataset.voice = element.voice;
+		d.dataset.id = index;
+	});
+}
 
 
 
@@ -315,26 +313,10 @@ let legumeBoxContent = [
 let legumeBox2 = document.querySelector('.legumeBox2');
 let chercheLegumeTitre = document.querySelector('#chercheLeLegume h2');
 
-function initJeuLegume() {
-	legumeBoxContent = shuffle(legumeBoxContent);
-	legumeBoxContent.forEach((element, index) => {
-		let box = document.createElement("li", {'class': 'box'+index});
-		let image = document.createElement("img", {'src': element.image});
-		image.setAttribute("src", 'images/' + element.image);
-		image.setAttribute("alt", element.voice);
-		let bi = box.appendChild(image);
-
-		d = legumeBox2.appendChild(box);
-		d.classList.add('box', 'box-'+index, 'clickable');
-		d.dataset.sexe = element.sexe;
-		d.dataset.voice = element.voice;
-		d.dataset.id = index;
-	});
-}
-
 function trouveLeLegume() {
 	legumeBox2.innerHTML = '';
-	initJeuLegume();
+	// initJeuLegume();
+	initJeu(legumeBoxContent, legumeBox2);
 	let solution = getRandomInt(legumeBoxContent.length);
 	let nomLegumeCapitalized = legumeBoxContent[solution].voice.charAt(0).toUpperCase() + legumeBoxContent[solution].voice.slice(1)
 	chercheLegumeTitre.innerText = nomLegumeCapitalized;
