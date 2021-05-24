@@ -1,7 +1,3 @@
-console.log('ok');
-
-
-
 // Fonctions
 function getRandomInt(max) {
 	return Math.floor(Math.random() * max);
@@ -18,14 +14,33 @@ function shuffle(a) {
     return a;
 }
 
+function initJeu(tableau, cibleHtml) {
+	tableau = shuffle(tableau);
+	tableau.forEach((element, index) => {
+		let box = document.createElement("li", {'class': 'box'+index});
+		let image = document.createElement("img", {'src': element.image});
+		image.setAttribute("src", 'images/' + element.image);
+		image.setAttribute("alt", element.voice);
+		let bi = box.appendChild(image);
+
+		d = cibleHtml.appendChild(box);
+		d.classList.add('box', 'box-'+index, 'clickable');
+		d.dataset.sexe = element.sexe;
+		d.dataset.voice = element.voice;
+		d.dataset.id = index;
+	});
+}
+
 
 
 // Gestion du score
 let score = 0;
 let theScore = document.getElementById('score');
 
-
-
+function changeScore(addSub) {
+	score = score + addSub;
+	theScore.innerText = score;
+}
 
 
 
@@ -47,20 +62,28 @@ hamburger.addEventListener('click', function() {
 
 
 
-// Prépare la synthèse vocale en anglais
+
+// Prépare la synthèse vocale en français
 let synth = window.speechSynthesis;
 
-function parle(str) {
+function parle(str, fnctonend) {
 	let annonce = new SpeechSynthesisUtterance(str);
 	annonce.lang = "fr-FR";
 	annonce.rate = 1;
 	synth.speak(annonce);
+console.log(str, typeof fnctonend);
+	if (fnctonend === undefined) {
+	} else {
+		annonce.onend = function(event) {
+			// fnctonend();
+		}
+	}
 }
-function ditQuelquechose(str) {
+function ditQuelquechose(str, fnctonend) {
 	if (synth.speaking) {
 		synth.cancel();
 	}
-	parle(str);
+	parle(str, fnctonend);
 }
 
 
@@ -69,11 +92,19 @@ function ditQuelquechose(str) {
 let nav = document.querySelectorAll('#nav li a');
 let view = document.querySelectorAll('.view');
 // au chargement, on ne garde que la première view
-nav.forEach((element, index) => {
-	
-	view[index].classList.add('d-none');
+window.addEventListener('load', (event) => {
+	nav.forEach((element, index) => {
+		view[index].classList.add('d-none');
+	});
+
+	let viewId = location.href.split('#');
+	if (viewId.length > 1 && viewId[1] != '' && document.getElementById(viewId[1])) {
+		document.getElementById(viewId[1]).classList.remove('d-none');
+		lanceVue(viewId[1]);
+	} else {
+		view[0].classList.remove('d-none');
+	}
 });
-view[0].classList.remove('d-none');
 nav.forEach((element, index) => {
 	element.addEventListener('click', (element) => {
 		nav.forEach((element, index) => {
@@ -83,21 +114,27 @@ nav.forEach((element, index) => {
 		let laVue = view[index].getAttribute('id');
 		menu.classList.remove('show');
 
-		// On lance le jeu
-		let animal = "chercheAnimal";
-		let legume = "chercheLeLegume";
-		if (laVue.substring(laVue.length - animal.length) == animal) {
-			trouveAnimal();
-			theScore.innerText = score;
-		} else if (laVue.substring(laVue.length - legume.length) == legume){
-			trouveLeLegume();
-			theScore.innerText = score;
-		} else {
-			theScore.innerText = '';
-		}
+		lanceVue(laVue);
 	});
 });
-
+function lanceVue(laVue) {
+	// On lance le jeu
+	let animal = "chercheAnimal";
+	let legume = "chercheLeLegume";
+	let fruit = "chercheLeFruit";
+	if (laVue.substring(laVue.length - animal.length) == animal) {
+		trouveAnimal(chercheAnimalTitre);
+		theScore.innerText = score;
+	} else if (laVue.substring(laVue.length - legume.length) == legume){
+		trouveLeLegume(chercheLegumeTitre);
+		theScore.innerText = score;
+	} else if (laVue.substring(laVue.length - fruit.length) == fruit){
+		trouveLeFruit();
+		theScore.innerText = score;
+	} else {
+		theScore.innerText = '';
+	}
+}
 
 
 
@@ -235,15 +272,15 @@ animauxBoxContent.forEach((element, index) => {
 let animauxBox2 = document.querySelector('.animauxBox2');
 let chercheAnimalTitre = document.querySelector('#chercheAnimal h2');
 
-function trouveAnimal() {
+function trouveAnimal(leTitre) {
 	animauxBox2.innerHTML = '';
 	initJeu(animauxBoxContent, animauxBox2);
 	let solution = getRandomInt(animauxBoxContent.length);
 	let nomAnimalCapitalized = animauxBoxContent[solution].voice.charAt(0).toUpperCase() + animauxBoxContent[solution].voice.slice(1)
-	chercheAnimalTitre.innerText = nomAnimalCapitalized;
+	leTitre.innerText = nomAnimalCapitalized;
 	s = 'Cherche ' + animauxBoxContent[solution].sexe + ' ' + animauxBoxContent[solution].voice;
 	ditQuelquechose(s);
-	chercheAnimalTitre.addEventListener('click', event => {
+	leTitre.addEventListener('click', event => {
 		ditQuelquechose(s);
 	});
 
@@ -252,40 +289,17 @@ function trouveAnimal() {
 	boxClickable.forEach((element, index) => {
 		element.addEventListener('click', event => {
 			if (boxClickable[index].dataset.id == solution) {
-				score += 1;
-				theScore.innerText = score;
-				ditQuelquechose('Gagné !');
-				trouveAnimal();
+				changeScore(1);
+				ditQuelquechose('Gagné !'); //, trouveAnimal(chercheAnimalTitre));
 			} else {
 				ditQuelquechose('Perdu !');
-				score -= 1;
-				theScore.innerText = score;
+				changeScore(-1);
 				boxClickable[index].removeEventListener('click', event => {}, true);
 				boxClickable[index].classList.remove('clickable');
 			}
 		});
 	});
 }
-
-
-function initJeu(tableau, cibleHtml) {
-	tableau = shuffle(tableau);
-	tableau.forEach((element, index) => {
-		let box = document.createElement("li", {'class': 'box'+index});
-		let image = document.createElement("img", {'src': element.image});
-		image.setAttribute("src", 'images/' + element.image);
-		image.setAttribute("alt", element.voice);
-		let bi = box.appendChild(image);
-
-		d = cibleHtml.appendChild(box);
-		d.classList.add('box', 'box-'+index, 'clickable');
-		d.dataset.sexe = element.sexe;
-		d.dataset.voice = element.voice;
-		d.dataset.id = index;
-	});
-}
-
-
 
 
 // trouve le légume
@@ -298,31 +312,36 @@ let legumeBoxContent = [
 	{ 'image': 'legumes/bettrave.jpg', 'sexe': 'la ', 'voice' : 'bettrave' },
 	{ 'image': 'legumes/broccoli-1238250_640.jpg', 'sexe': 'le ', 'voice' : 'broccoli' },
 	{ 'image': 'legumes/carrottes-673184_640.jpg', 'sexe': 'les ', 'voice' : 'carrottes' },
-	{ 'image': 'legumes/chou-romanesco-3493007_640.jpg', 'sexe': 'le ', 'voice' : 'chou' },
+	{ 'image': 'legumes/chou-romanesco-3493007_640.jpg', 'sexe': 'le ', 'voice' : 'chou romanesco' },
 	{ 'image': 'legumes/choux-de-bruxelles-3100702_640.jpg', 'sexe': 'les ', 'voice' : 'choux de Bruxelles' },
 	{ 'image': 'legumes/citrouilles-2204643_640.jpg', 'sexe': 'les ', 'voice' : 'citrouilles' },
 	{ 'image': 'legumes/cornichons-849269_640.jpg', 'sexe': 'les ', 'voice' : 'cornichons' },
 	{ 'image': 'legumes/gingembre-1714196_640.jpg', 'sexe': 'le ', 'voice' : 'gingembre' },
-	{ 'image': 'legumes/mais-3705687_640.jpg', 'sexe': 'le ', 'voice' : 'mais' },
+	{ 'image': 'legumes/mais-3705687_640.jpg', 'sexe': 'le ', 'voice' : 'maïs' },
 	{ 'image': 'legumes/oignons-1397037_640.jpg', 'sexe': "les ", 'voice' : 'oignons' },
 	{ 'image': 'legumes/petits-pois-1205673_640.jpg', 'sexe': 'les ', 'voice' : 'petits pois' },
-	{ 'image': 'legumes/poivrons-421087_640.jpg', 'sexe': 'le ', 'voice' : 'poivrons' },
+	{ 'image': 'legumes/poivrons-421087_640.jpg', 'sexe': 'les ', 'voice' : 'poivrons' },
 	{ 'image': 'legumes/pomme-de-terre-1585060_640.jpg', 'sexe': 'les ', 'voice' : 'pommes de terre' },
 	{ 'image': 'legumes/tomates-3520004_640.jpg', 'sexe': 'les ', 'voice' : 'tomates' },
+	{ 'image': 'legumes/artichaux-4030306_640.jpg', 'sexe': "l'", 'voice': 'artichaux'},
+	{ 'image': 'legumes/chou-fleur.jpg', 'sexe': "le ", 'voice': 'chou fleur'},
+	{ 'image': 'legumes/persil-4688651_640.jpg', 'sexe': 'le ', 'voice': 'persil'},
+	{ 'image': 'legumes/radis-6166443_640.jpg', 'sexe': 'les ', 'voice': 'radis'},
+	{ 'image': 'legumes/salade.jpg', 'sexe': 'la ', 'voice': 'salade'},
 ];
 let legumeBox2 = document.querySelector('.legumeBox2');
 let chercheLegumeTitre = document.querySelector('#chercheLeLegume h2');
 
-function trouveLeLegume() {
+function trouveLeLegume(leTitre) {
 	legumeBox2.innerHTML = '';
 	// initJeuLegume();
 	initJeu(legumeBoxContent, legumeBox2);
 	let solution = getRandomInt(legumeBoxContent.length);
 	let nomLegumeCapitalized = legumeBoxContent[solution].voice.charAt(0).toUpperCase() + legumeBoxContent[solution].voice.slice(1)
-	chercheLegumeTitre.innerText = nomLegumeCapitalized;
+	leTitre.innerText = nomLegumeCapitalized;
 	s = 'Cherche ' + legumeBoxContent[solution].sexe + legumeBoxContent[solution].voice;
 	ditQuelquechose(s);
-	chercheLegumeTitre.addEventListener('click', event => {
+	leTitre.addEventListener('click', event => {
 		ditQuelquechose(s);
 	});
 
@@ -331,20 +350,87 @@ function trouveLeLegume() {
 	boxClickable.forEach((element, index) => {
 		element.addEventListener('click', event => {
 			if (boxClickable[index].dataset.id == solution) {
-				score += 1;
-				theScore.innerText = score;
-				ditQuelquechose('Gagné !');
-				trouveLeLegume();
+				changeScore(1);
+				ditQuelquechose('Gagné !');//, trouveLeLegume(chercheLegumeTitre))
 			} else {
 				ditQuelquechose('Perdu !');
-				score -= 1;
-				theScore.innerText = score;
+				changeScore(-1);
 				boxClickable[index].removeEventListener('click', event => {}, true);
 				boxClickable[index].classList.remove('clickable');
 			}
 		});
 	});
 }
+
+// trouve le légume
+let fruitBoxContent = [
+	{ 'image': 'fruits/noisettes-73939_640.jpg', 'sexe': 'la ', 'voice': 'noisettes'},
+	{ 'image': 'fruits/abricots-2523272_640.jpg', 'sexe': "l'", 'voice': 'abricots'},
+	{ 'image': 'fruits/ananas-2220704_640.jpg', 'sexe': "l'", 'voice': 'ananas'},
+	{ 'image': 'fruits/avocat-2115922_640.jpg', 'sexe': "l'", 'voice': 'avocat'},
+	{ 'image': 'fruits/bananes-1119790_640.jpg', 'sexe': 'la ', 'voice': 'bananes'},
+	{ 'image': 'fruits/cacao-452911_640.jpg', 'sexe': 'le ', 'voice': 'cacao'},
+	{ 'image': 'fruits/chataignes-1710430_640.jpg', 'sexe': 'les ', 'voice': 'chataignes'},
+	{ 'image': 'fruits/citron-2121307_640.jpg', 'sexe': 'le ', 'voice': 'citron'},
+	{ 'image': 'fruits/clementines-1721590_640.jpg', 'sexe': 'les ', 'voice': 'clementines'},
+	{ 'image': 'fruits/figues-2079166_640.jpg', 'sexe': 'la ', 'voice': 'figues'},
+	{ 'image': 'fruits/fraises-3431122_640.jpg', 'sexe': 'les ', 'voice': 'fraises'},
+	{ 'image': 'fruits/framboises-3583005_640.jpg', 'sexe': 'les ', 'voice': 'framboises'},
+	{ 'image': 'fruits/grenade-3383814_640.jpg', 'sexe': 'la ', 'voice': 'grenade'},
+	{ 'image': 'fruits/groseilles-3538617_640.jpg', 'sexe': 'les ', 'voice': 'groseilles'},
+	{ 'image': 'fruits/kiwi-2673038_640.png', 'sexe': 'le ', 'voice': 'kiwi'},
+	{ 'image': 'fruits/litchi-520481_640.jpg', 'sexe': 'le ', 'voice': 'litchi'},
+	{ 'image': 'fruits/mangue-1239241_640.jpg', 'sexe': 'la ', 'voice': 'mangue'},
+	{ 'image': 'fruits/melon-3433835_640.jpg', 'sexe': 'le ', 'voice': 'melon'},
+	{ 'image': 'fruits/myrtilles-690072_640.jpg', 'sexe': 'les ', 'voice': 'myrtilles'},
+	{ 'image': 'fruits/noix-658569_640.jpg', 'sexe': 'la ', 'voice': 'noix'},
+	{ 'image': 'fruits/noix-de-coco-3062139_640.jpg', 'sexe': 'la ', 'voice': 'noix de coco'},
+	{ 'image': 'fruits/oranges-1995056_640.jpg', 'sexe': "les ", 'voice': 'oranges'},
+	{ 'image': 'fruits/pasteques-2636_640.jpg', 'sexe': 'les ', 'voice': 'pasteques'},
+	{ 'image': 'fruits/physalis-4451017_640.jpg', 'sexe': 'le ', 'voice': 'physalis'},
+	{ 'image': 'fruits/poires-1534494_640.jpg', 'sexe': 'les ', 'voice': 'poires'},
+	{ 'image': 'fruits/pomme-2788662_640.jpg', 'sexe': 'la ', 'voice': 'pomme'},
+	{ 'image': 'fruits/prunes-3641830_640.jpg', 'sexe': 'les ', 'voice': 'prunes'},
+	{ 'image': 'fruits/raisin-3550733_640.jpg', 'sexe': 'le ', 'voice': 'raisin'},
+];
+
+
+function trouveLeFruit() {
+	let chercheFruitTitre = document.querySelector('#chercheLeFruit h2');
+	let fruitBox2 = document.querySelector('#chercheLeFruit .fruitBox2');
+	let boxClickable = document.querySelectorAll('#chercheLeFruit .box.clickable');
+
+	fruitBox2.innerHTML = '';
+	let tableau = fruitBoxContent;
+	initJeu(tableau, fruitBox2);
+	let solution = getRandomInt(tableau.length);
+	let nomCapitalized = tableau[solution].voice.charAt(0).toUpperCase() + tableau[solution].voice.slice(1)
+	chercheFruitTitre.innerText = nomCapitalized;
+	s = 'Cherche ' + tableau[solution].sexe + tableau[solution].voice;
+	ditQuelquechose(s);
+	chercheFruitTitre.addEventListener('click', event => {
+		ditQuelquechose(s);
+	});
+
+
+	boxClickable.forEach((element, index) => {
+		element.addEventListener('click', gagnePerdu, true);
+		function gagnePerdu(event) {
+			if (boxClickable[index].dataset.id == solution) {
+				changeScore(1);
+				// ditQuelquechose('Gagné !', trouveLeFruit());
+				ditQuelquechose('Gagné !');
+				trouveLeFruit();
+			} else {
+				ditQuelquechose('Perdu !');
+				changeScore(-1);
+				boxClickable[index].removeEventListener('click', gagnePerdu, true);
+				boxClickable[index].classList.remove('clickable');
+			}
+		}
+	});
+}
+
 
 
 
@@ -361,3 +447,5 @@ function trouveLeLegume() {
 //     );
 //   });
 // }
+
+
