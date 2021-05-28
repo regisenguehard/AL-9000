@@ -21,7 +21,6 @@ function initJeu(tableau, cibleHtml) {
 		let image = document.createElement("img", {'src': element.image});
 		image.setAttribute("src", 'images/' + element.image);
 		image.setAttribute("alt", element.voice);
-		let bi = box.appendChild(image);
 
 		d = cibleHtml.appendChild(box);
 		d.classList.add('box', 'box-'+index, 'clickable');
@@ -71,7 +70,7 @@ function parle(str, fnctonend) {
 	annonce.lang = "fr-FR";
 	annonce.rate = 1;
 	synth.speak(annonce);
-console.log(str, typeof fnctonend);
+//console.log(str, typeof fnctonend);
 	if (fnctonend === undefined) {
 	} else {
 		annonce.onend = function(event) {
@@ -122,6 +121,7 @@ function lanceVue(laVue) {
 	let animal = "chercheAnimal";
 	let legume = "chercheLeLegume";
 	let fruit = "chercheLeFruit";
+	let recopie = "recopie";
 	if (laVue.substring(laVue.length - animal.length) == animal) {
 		trouveAnimal(chercheAnimalTitre);
 		theScore.innerText = score;
@@ -131,6 +131,8 @@ function lanceVue(laVue) {
 	} else if (laVue.substring(laVue.length - fruit.length) == fruit){
 		trouveLeFruit();
 		theScore.innerText = score;
+	} else if (laVue.substring(laVue.length - recopie.length) == recopie){
+		recopieLeMot();
 	} else {
 		theScore.innerText = '';
 	}
@@ -161,7 +163,7 @@ lire.addEventListener('click', event => {
 // lire une lettre
 let alphabetBox = document.querySelectorAll('#alphabetBox .box');
 alphabetBox.forEach((element, index) => {
-	element.addEventListener('click', event => {
+	element.addEventListener('click', (event) => {
 		parle(element.innerText.toLowerCase());
 	});
 });
@@ -170,7 +172,7 @@ alphabetBox.forEach((element, index) => {
 
 // clavier
 let clavierBox = document.querySelector('#clavier .box');
-document.addEventListener('keydown', event => {
+document.addEventListener('keyup', event => {
 	let url = String(window.location);
 	if (url.substring(url.length - 7) == "clavier") {
 		let nomTouche = event.key;
@@ -179,7 +181,7 @@ document.addEventListener('keydown', event => {
 			parle(nomTouche);
 		}
 	}
-})
+});
 
 
 // Animaux
@@ -370,9 +372,9 @@ let fruitBoxContent = [
 	{ 'image': 'fruits/avocat-2115922_640.jpg', 'sexe': "l'", 'voice': 'avocat'},
 	{ 'image': 'fruits/bananes-1119790_640.jpg', 'sexe': 'la ', 'voice': 'bananes'},
 	{ 'image': 'fruits/cacao-452911_640.jpg', 'sexe': 'le ', 'voice': 'cacao'},
-	{ 'image': 'fruits/chataignes-1710430_640.jpg', 'sexe': 'les ', 'voice': 'chataignes'},
+	{ 'image': 'fruits/chataignes-1710430_640.jpg', 'sexe': 'les ', 'voice': 'châtaignes'},
 	{ 'image': 'fruits/citron-2121307_640.jpg', 'sexe': 'le ', 'voice': 'citron'},
-	{ 'image': 'fruits/clementines-1721590_640.jpg', 'sexe': 'les ', 'voice': 'clementines'},
+	{ 'image': 'fruits/clementines-1721590_640.jpg', 'sexe': 'les ', 'voice': 'clémentines'},
 	{ 'image': 'fruits/figues-2079166_640.jpg', 'sexe': 'la ', 'voice': 'figues'},
 	{ 'image': 'fruits/fraises-3431122_640.jpg', 'sexe': 'les ', 'voice': 'fraises'},
 	{ 'image': 'fruits/framboises-3583005_640.jpg', 'sexe': 'les ', 'voice': 'framboises'},
@@ -386,14 +388,13 @@ let fruitBoxContent = [
 	{ 'image': 'fruits/noix-658569_640.jpg', 'sexe': 'la ', 'voice': 'noix'},
 	{ 'image': 'fruits/noix-de-coco-3062139_640.jpg', 'sexe': 'la ', 'voice': 'noix de coco'},
 	{ 'image': 'fruits/oranges-1995056_640.jpg', 'sexe': "les ", 'voice': 'oranges'},
-	{ 'image': 'fruits/pasteques-2636_640.jpg', 'sexe': 'les ', 'voice': 'pasteques'},
+	{ 'image': 'fruits/pasteques-2636_640.jpg', 'sexe': 'les ', 'voice': 'pastèques'},
 	{ 'image': 'fruits/physalis-4451017_640.jpg', 'sexe': 'le ', 'voice': 'physalis'},
 	{ 'image': 'fruits/poires-1534494_640.jpg', 'sexe': 'les ', 'voice': 'poires'},
 	{ 'image': 'fruits/pomme-2788662_640.jpg', 'sexe': 'la ', 'voice': 'pomme'},
 	{ 'image': 'fruits/prunes-3641830_640.jpg', 'sexe': 'les ', 'voice': 'prunes'},
 	{ 'image': 'fruits/raisin-3550733_640.jpg', 'sexe': 'le ', 'voice': 'raisin'},
 ];
-
 
 function trouveLeFruit() {
 	let chercheFruitTitre = document.querySelector('#chercheLeFruit h2');
@@ -432,6 +433,50 @@ function trouveLeFruit() {
 }
 
 
+
+function recopieLeMot() {
+	let recopieImg = document.querySelector('#recopie #recopieImg');
+	let recopieMot = document.querySelector('#recopie #recopieMot');
+	let recopieSaisie = document.querySelector('#recopie #recopieSaisie');
+	let recopieSuivant = document.querySelector('#recopie #recopieSuivant');
+	let solutionText;
+
+	function init() {
+		let solutionMot = getRandomInt(fruitBoxContent.length);
+		solutionText = fruitBoxContent[solutionMot].voice;
+		recopieSuivant.classList.remove('show');
+		recopieSaisie.value = '';
+		recopieImg.setAttribute('src', 'images/' + fruitBoxContent[solutionMot].image);
+		recopieMot.innerText = solutionText;
+		parle(solutionText);
+		recopieSaisie.focus();
+	}
+	init();
+
+	recopieMot.addEventListener('click', event => {
+		ditQuelquechose(solutionText);
+	});
+
+	recopieSuivant.addEventListener('click', event => {
+		if (lePrenom.value != '') {
+			parle('Bravo ' + lePrenom.value);
+		}
+		init();
+	});
+	function lecture() {
+		let nomTouche = event.key;
+		if (event.which >= 48 && event.which <= 90) {
+			parle(nomTouche);
+		}
+		console.log(solutionText, recopieSaisie.value, lePrenom.value)
+		if (solutionText == recopieSaisie.value) {
+			recopieSuivant.classList.add('show');
+		} else {
+			recopieSuivant.classList.remove('show');
+		}
+	}
+	recopieSaisie.addEventListener('keyup', lecture);
+}
 
 
 // Crée le Service Worker

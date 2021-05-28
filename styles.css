@@ -221,9 +221,11 @@ input {
 	border: 1px solid rgba(26, 122, 196, 1);
 	outline: none;
 }
+input[type="button"],
 input[type="submit"] {
 	background-color: rgba(26, 122, 196, 1);
 	color: #fff;
+	cursor: pointer;
 }
 
 
@@ -314,6 +316,7 @@ input[type="submit"] {
 		width: calc(100% / 7);
 	}
 }
+#recopie #recopieMot,
 .imageGrid h2 {
 	cursor: pointer;
 }
@@ -339,3 +342,14 @@ input[type="submit"] {
 	width: 100%;
 }
 
+
+
+#recopie #recopieMot {
+	text-transform: uppercase;
+}
+#recopie #recopieSuivant {
+	display: none;
+}
+#recopie #recopieSuivant.show {
+	display: block;
+}
