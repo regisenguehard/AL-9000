@@ -23,11 +23,13 @@ function initJeu(tableau, cibleHtml) {
 		image.setAttribute("alt", element.voice);
 
 		d = cibleHtml.appendChild(box);
+		d = cibleHtml.appendChild(image);
 		d.classList.add('box', 'box-'+index, 'clickable');
 		d.dataset.sexe = element.sexe;
 		d.dataset.voice = element.voice;
 		d.dataset.id = index;
 	});
+	return true;
 }
 
 
@@ -145,7 +147,8 @@ let lePrenom = document.getElementById('lePrenom');
 let enregistrer = document.getElementById('enregistrer');
 enregistrer.addEventListener('click', event => {
 	event.preventDefault();
-	parle('Bonjour ' + lePrenom.value);
+	parle('Bonjour ' + lePrenom.value + '. Que souhaites-tu faire ?');
+	menu.classList.add('show');
 });
 
 
@@ -364,7 +367,11 @@ function trouveLeLegume(leTitre) {
 	});
 }
 
-// trouve le légume
+
+
+
+
+// trouve le fruit
 let fruitBoxContent = [
 	{ 'image': 'fruits/noisettes-73939_640.jpg', 'sexe': 'la ', 'voice': 'noisettes'},
 	{ 'image': 'fruits/abricots-2523272_640.jpg', 'sexe': "l'", 'voice': 'abricots'},
@@ -399,70 +406,70 @@ let fruitBoxContent = [
 function trouveLeFruit() {
 	let chercheFruitTitre = document.querySelector('#chercheLeFruit h2');
 	let fruitBox2 = document.querySelector('#chercheLeFruit .fruitBox2');
-	let boxClickable = document.querySelectorAll('#chercheLeFruit .box.clickable');
 
 	fruitBox2.innerHTML = '';
 	let tableau = fruitBoxContent;
-	initJeu(tableau, fruitBox2);
-	let solution = getRandomInt(tableau.length);
-	let nomCapitalized = tableau[solution].voice.charAt(0).toUpperCase() + tableau[solution].voice.slice(1)
-	chercheFruitTitre.innerText = nomCapitalized;
-	s = 'Cherche ' + tableau[solution].sexe + tableau[solution].voice;
-	ditQuelquechose(s);
-	chercheFruitTitre.addEventListener('click', event => {
+	if (initJeu(tableau, fruitBox2)) {
+		let boxClickable = document.querySelectorAll('#chercheLeFruit .box.clickable');
+		let solution = getRandomInt(tableau.length);
+		let nomCapitalized = tableau[solution].voice.charAt(0).toUpperCase() + tableau[solution].voice.slice(1)
+		chercheFruitTitre.innerText = nomCapitalized;
+		s = 'Cherche ' + tableau[solution].sexe + tableau[solution].voice;
 		ditQuelquechose(s);
-	});
+		chercheFruitTitre.addEventListener('click', event => {
+			ditQuelquechose(s);
+		});
 
-
-	boxClickable.forEach((element, index) => {
-		element.addEventListener('click', gagnePerdu, true);
-		function gagnePerdu(event) {
-			if (boxClickable[index].dataset.id == solution) {
-				changeScore(1);
-				// ditQuelquechose('Gagné !', trouveLeFruit());
-				ditQuelquechose('Gagné !');
-				trouveLeFruit();
-			} else {
-				ditQuelquechose('Perdu !');
-				changeScore(-1);
-				boxClickable[index].removeEventListener('click', gagnePerdu, true);
-				boxClickable[index].classList.remove('clickable');
+		boxClickable.forEach((element, index) => {
+			element.addEventListener('click', gagnePerdu, true);
+			function gagnePerdu(event) {
+				if (boxClickable[index].dataset.id == solution) {
+					changeScore(1);
+					// ditQuelquechose('Gagné !', trouveLeFruit());
+					ditQuelquechose('Gagné !');
+					trouveLeFruit();
+				} else {
+					ditQuelquechose('Perdu !');
+					changeScore(-1);
+					boxClickable[index].removeEventListener('click', gagnePerdu, true);
+					boxClickable[index].classList.remove('clickable');
+				}
 			}
-		}
-	});
+		});
+	}
 }
 
 
+
+let recopieSuivant = document.querySelector('#recopie #recopieSuivant');
+recopieSuivant.addEventListener('click', event => {
+	event.preventDefault();
+	if (lePrenom.value != '') {
+		parle('Bravo ' + lePrenom.value);
+	}
+	recopieLeMot();
+});
 
 function recopieLeMot() {
 	let recopieImg = document.querySelector('#recopie #recopieImg');
 	let recopieMot = document.querySelector('#recopie #recopieMot');
 	let recopieSaisie = document.querySelector('#recopie #recopieSaisie');
 	let recopieSuivant = document.querySelector('#recopie #recopieSuivant');
-	let solutionText;
-
-	function init() {
-		let solutionMot = getRandomInt(fruitBoxContent.length);
-		solutionText = fruitBoxContent[solutionMot].voice;
-		recopieSuivant.classList.remove('show');
-		recopieSaisie.value = '';
-		recopieImg.setAttribute('src', 'images/' + fruitBoxContent[solutionMot].image);
-		recopieMot.innerText = solutionText;
-		parle(solutionText);
-		recopieSaisie.focus();
-	}
-	init();
+	let solutionMot = getRandomInt(fruitBoxContent.length);
+	let solutionText = fruitBoxContent[solutionMot].voice;
+debugger;
+console.log('solution', solutionText);
+	recopieSuivant.classList.remove('show');
+	recopieSaisie.value = '';
+	recopieImg.setAttribute('src', 'images/' + fruitBoxContent[solutionMot].image);
+	recopieMot.innerText = solutionText;
+	parle(solutionText);
+	recopieSaisie.focus();
 
 	recopieMot.addEventListener('click', event => {
 		ditQuelquechose(solutionText);
 	});
 
-	recopieSuivant.addEventListener('click', event => {
-		if (lePrenom.value != '') {
-			parle('Bravo ' + lePrenom.value);
-		}
-		init();
-	});
 	function lecture() {
 		let nomTouche = event.key;
 		if (event.which >= 48 && event.which <= 90) {
