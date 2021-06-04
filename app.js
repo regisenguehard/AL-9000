@@ -450,14 +450,15 @@ recopieSuivant.addEventListener('click', event => {
 	recopieLeMot();
 });
 
+let solutionText;
 function recopieLeMot() {
 	let recopieImg = document.querySelector('#recopie #recopieImg');
 	let recopieMot = document.querySelector('#recopie #recopieMot');
 	let recopieSaisie = document.querySelector('#recopie #recopieSaisie');
 	let recopieSuivant = document.querySelector('#recopie #recopieSuivant');
 	let solutionMot = getRandomInt(fruitBoxContent.length);
-	let solutionText = fruitBoxContent[solutionMot].voice;
-debugger;
+	solutionText = fruitBoxContent[solutionMot].voice;
+// debugger;
 console.log('solution', solutionText);
 	recopieSuivant.classList.remove('show');
 	recopieSaisie.value = '';
@@ -465,26 +466,27 @@ console.log('solution', solutionText);
 	recopieMot.innerText = solutionText;
 	parle(solutionText);
 	recopieSaisie.focus();
+	console.log('fff');
 
 	recopieMot.addEventListener('click', event => {
 		ditQuelquechose(solutionText);
 	});
 
-	function lecture() {
-		let nomTouche = event.key;
-		if (event.which >= 48 && event.which <= 90) {
-			parle(nomTouche);
-		}
-		console.log(solutionText, recopieSaisie.value, lePrenom.value)
-		if (solutionText == recopieSaisie.value) {
-			recopieSuivant.classList.add('show');
-		} else {
-			recopieSuivant.classList.remove('show');
-		}
-	}
 	recopieSaisie.addEventListener('keyup', lecture);
 }
 
+function lecture() {
+	let nomTouche = event.key;
+	if (event.which >= 48 && event.which <= 90) {
+		parle(nomTouche);
+	}
+	console.log(solutionText, recopieSaisie.value, lePrenom.value)
+	if (solutionText == recopieSaisie.value) {
+		recopieSuivant.classList.add('show');
+	} else {
+		recopieSuivant.classList.remove('show');
+	}
+}
 
 // Crée le Service Worker
 // if ("serviceWorker" in navigator) {
