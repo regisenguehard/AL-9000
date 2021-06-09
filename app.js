@@ -22,8 +22,9 @@ function initJeu(tableau, cibleHtml) {
 		image.setAttribute("src", 'images/' + element.image);
 		image.setAttribute("alt", element.voice);
 
+		// img enfant de li
+		box.append(image);
 		d = cibleHtml.appendChild(box);
-		d = cibleHtml.appendChild(image);
 		d.classList.add('box', 'box-'+index, 'clickable');
 		d.dataset.sexe = element.sexe;
 		d.dataset.voice = element.voice;
@@ -76,7 +77,7 @@ function parle(str, fnctonend) {
 	if (fnctonend === undefined) {
 	} else {
 		annonce.onend = function(event) {
-			// fnctonend();
+			fnctonend();
 		}
 	}
 }
@@ -125,10 +126,10 @@ function lanceVue(laVue) {
 	let fruit = "chercheLeFruit";
 	let recopie = "recopie";
 	if (laVue.substring(laVue.length - animal.length) == animal) {
-		trouveAnimal(chercheAnimalTitre);
+		trouveAnimal();
 		theScore.innerText = score;
 	} else if (laVue.substring(laVue.length - legume.length) == legume){
-		trouveLeLegume(chercheLegumeTitre);
+		trouveLeLegume();
 		theScore.innerText = score;
 	} else if (laVue.substring(laVue.length - fruit.length) == fruit){
 		trouveLeFruit();
@@ -274,36 +275,39 @@ animauxBoxContent.forEach((element, index) => {
 
 
 // trouve Animal
-let animauxBox2 = document.querySelector('.animauxBox2');
-let chercheAnimalTitre = document.querySelector('#chercheAnimal h2');
 
-function trouveAnimal(leTitre) {
-	animauxBox2.innerHTML = '';
-	initJeu(animauxBoxContent, animauxBox2);
-	let solution = getRandomInt(animauxBoxContent.length);
-	let nomAnimalCapitalized = animauxBoxContent[solution].voice.charAt(0).toUpperCase() + animauxBoxContent[solution].voice.slice(1)
-	leTitre.innerText = nomAnimalCapitalized;
-	s = 'Cherche ' + animauxBoxContent[solution].sexe + ' ' + animauxBoxContent[solution].voice;
-	ditQuelquechose(s);
-	leTitre.addEventListener('click', event => {
+function trouveAnimal() {
+	let titre = document.querySelector('#chercheAnimal h2');
+	let box = document.querySelector('#chercheAnimal .animauxBox2');
+
+	box.innerHTML = '';
+	let tableau = animauxBoxContent;
+	if (initJeu(tableau, box)) {
+		let boxClickable = document.querySelectorAll('#chercheAnimal .box.clickable');
+		let solution = getRandomInt(tableau.length);
+		let nomCapitalized = tableau[solution].voice.charAt(0).toUpperCase() + tableau[solution].voice.slice(1)
+		titre.innerText = nomCapitalized;
+		s = 'Cherche ' + tableau[solution].sexe + tableau[solution].voice;
 		ditQuelquechose(s);
-	});
+		titre.addEventListener('click', event => {
+			ditQuelquechose(s);
+		});
 
-
-	let boxClickable = document.querySelectorAll('#chercheAnimal .box.clickable');
-	boxClickable.forEach((element, index) => {
-		element.addEventListener('click', event => {
-			if (boxClickable[index].dataset.id == solution) {
-				changeScore(1);
-				ditQuelquechose('Gagné !'); //, trouveAnimal(chercheAnimalTitre));
-			} else {
-				ditQuelquechose('Perdu !');
-				changeScore(-1);
-				boxClickable[index].removeEventListener('click', event => {}, true);
-				boxClickable[index].classList.remove('clickable');
+		boxClickable.forEach((element, index) => {
+			element.addEventListener('click', gagnePerdu, true);
+			function gagnePerdu(event) {
+				if (boxClickable[index].dataset.id == solution) {
+					changeScore(1);
+					ditQuelquechose('Gagné !', trouveAnimal);
+				} else {
+					ditQuelquechose('Perdu !');
+					changeScore(-1);
+					boxClickable[index].removeEventListener('click', gagnePerdu, true);
+					boxClickable[index].classList.remove('clickable');
+				}
 			}
 		});
-	});
+	}
 }
 
 
@@ -334,37 +338,38 @@ let legumeBoxContent = [
 	{ 'image': 'legumes/radis-6166443_640.jpg', 'sexe': 'les ', 'voice': 'radis'},
 	{ 'image': 'legumes/salade.jpg', 'sexe': 'la ', 'voice': 'salade'},
 ];
-let legumeBox2 = document.querySelector('.legumeBox2');
-let chercheLegumeTitre = document.querySelector('#chercheLeLegume h2');
-
-function trouveLeLegume(leTitre) {
-	legumeBox2.innerHTML = '';
-	// initJeuLegume();
-	initJeu(legumeBoxContent, legumeBox2);
-	let solution = getRandomInt(legumeBoxContent.length);
-	let nomLegumeCapitalized = legumeBoxContent[solution].voice.charAt(0).toUpperCase() + legumeBoxContent[solution].voice.slice(1)
-	leTitre.innerText = nomLegumeCapitalized;
-	s = 'Cherche ' + legumeBoxContent[solution].sexe + legumeBoxContent[solution].voice;
-	ditQuelquechose(s);
-	leTitre.addEventListener('click', event => {
+function trouveLeLegume() {
+	let titre = document.querySelector('#chercheLeLegume h2');
+	let box = document.querySelector('#chercheLeLegume .legumeBox2');
+	
+	box.innerHTML = '';
+	let tableau = legumeBoxContent;
+	if (initJeu(legumeBoxContent, box)) {
+		let boxClickable = document.querySelectorAll('#chercheLeLegume .box.clickable');
+		let solution = getRandomInt(tableau.length);
+		let nomCapitalized = tableau[solution].voice.charAt(0).toUpperCase() + tableau[solution].voice.slice(1)
+		titre.innerText = nomCapitalized;
+		s = 'Cherche ' + tableau[solution].sexe + tableau[solution].voice;
 		ditQuelquechose(s);
-	});
+		titre.addEventListener('click', event => {
+			ditQuelquechose(s);
+		});
 
-
-	let boxClickable = document.querySelectorAll('#chercheLeLegume .box.clickable');
-	boxClickable.forEach((element, index) => {
-		element.addEventListener('click', event => {
-			if (boxClickable[index].dataset.id == solution) {
-				changeScore(1);
-				ditQuelquechose('Gagné !');//, trouveLeLegume(chercheLegumeTitre))
-			} else {
-				ditQuelquechose('Perdu !');
-				changeScore(-1);
-				boxClickable[index].removeEventListener('click', event => {}, true);
-				boxClickable[index].classList.remove('clickable');
+		boxClickable.forEach((element, index) => {
+			element.addEventListener('click', gagnePerdu, true);
+			function gagnePerdu(event) {
+				if (boxClickable[index].dataset.id == solution) {
+					changeScore(1);
+					ditQuelquechose('Gagné !', trouveLeLegume);
+				} else {
+					ditQuelquechose('Perdu !');
+					changeScore(-1);
+					boxClickable[index].removeEventListener('click', gagnePerdu, true);
+					boxClickable[index].classList.remove('clickable');
+				}
 			}
 		});
-	});
+	}
 }
 
 
@@ -373,22 +378,22 @@ function trouveLeLegume(leTitre) {
 
 // trouve le fruit
 let fruitBoxContent = [
-	{ 'image': 'fruits/noisettes-73939_640.jpg', 'sexe': 'la ', 'voice': 'noisettes'},
-	{ 'image': 'fruits/abricots-2523272_640.jpg', 'sexe': "l'", 'voice': 'abricots'},
+	{ 'image': 'fruits/noisettes-73939_640.jpg', 'sexe': 'les ', 'voice': 'noisettes'},
+	{ 'image': 'fruits/abricots-2523272_640.jpg', 'sexe': "les ", 'voice': 'abricots'},
 	{ 'image': 'fruits/ananas-2220704_640.jpg', 'sexe': "l'", 'voice': 'ananas'},
 	{ 'image': 'fruits/avocat-2115922_640.jpg', 'sexe': "l'", 'voice': 'avocat'},
-	{ 'image': 'fruits/bananes-1119790_640.jpg', 'sexe': 'la ', 'voice': 'bananes'},
+	{ 'image': 'fruits/bananes-1119790_640.jpg', 'sexe': 'les ', 'voice': 'bananes'},
 	{ 'image': 'fruits/cacao-452911_640.jpg', 'sexe': 'le ', 'voice': 'cacao'},
 	{ 'image': 'fruits/chataignes-1710430_640.jpg', 'sexe': 'les ', 'voice': 'châtaignes'},
 	{ 'image': 'fruits/citron-2121307_640.jpg', 'sexe': 'le ', 'voice': 'citron'},
 	{ 'image': 'fruits/clementines-1721590_640.jpg', 'sexe': 'les ', 'voice': 'clémentines'},
-	{ 'image': 'fruits/figues-2079166_640.jpg', 'sexe': 'la ', 'voice': 'figues'},
+	{ 'image': 'fruits/figues-2079166_640.jpg', 'sexe': 'les ', 'voice': 'figues'},
 	{ 'image': 'fruits/fraises-3431122_640.jpg', 'sexe': 'les ', 'voice': 'fraises'},
 	{ 'image': 'fruits/framboises-3583005_640.jpg', 'sexe': 'les ', 'voice': 'framboises'},
 	{ 'image': 'fruits/grenade-3383814_640.jpg', 'sexe': 'la ', 'voice': 'grenade'},
 	{ 'image': 'fruits/groseilles-3538617_640.jpg', 'sexe': 'les ', 'voice': 'groseilles'},
 	{ 'image': 'fruits/kiwi-2673038_640.png', 'sexe': 'le ', 'voice': 'kiwi'},
-	{ 'image': 'fruits/litchi-520481_640.jpg', 'sexe': 'le ', 'voice': 'litchi'},
+	{ 'image': 'fruits/litchi-520481_640.jpg', 'sexe': 'les ', 'voice': 'litchis'},
 	{ 'image': 'fruits/mangue-1239241_640.jpg', 'sexe': 'la ', 'voice': 'mangue'},
 	{ 'image': 'fruits/melon-3433835_640.jpg', 'sexe': 'le ', 'voice': 'melon'},
 	{ 'image': 'fruits/myrtilles-690072_640.jpg', 'sexe': 'les ', 'voice': 'myrtilles'},
@@ -404,19 +409,19 @@ let fruitBoxContent = [
 ];
 
 function trouveLeFruit() {
-	let chercheFruitTitre = document.querySelector('#chercheLeFruit h2');
-	let fruitBox2 = document.querySelector('#chercheLeFruit .fruitBox2');
+	let titre = document.querySelector('#chercheLeFruit h2');
+	let box = document.querySelector('#chercheLeFruit .fruitBox2');
 
-	fruitBox2.innerHTML = '';
+	box.innerHTML = '';
 	let tableau = fruitBoxContent;
-	if (initJeu(tableau, fruitBox2)) {
+	if (initJeu(tableau, box)) {
 		let boxClickable = document.querySelectorAll('#chercheLeFruit .box.clickable');
 		let solution = getRandomInt(tableau.length);
 		let nomCapitalized = tableau[solution].voice.charAt(0).toUpperCase() + tableau[solution].voice.slice(1)
-		chercheFruitTitre.innerText = nomCapitalized;
+		titre.innerText = nomCapitalized;
 		s = 'Cherche ' + tableau[solution].sexe + tableau[solution].voice;
 		ditQuelquechose(s);
-		chercheFruitTitre.addEventListener('click', event => {
+		titre.addEventListener('click', event => {
 			ditQuelquechose(s);
 		});
 
@@ -425,9 +430,7 @@ function trouveLeFruit() {
 			function gagnePerdu(event) {
 				if (boxClickable[index].dataset.id == solution) {
 					changeScore(1);
-					// ditQuelquechose('Gagné !', trouveLeFruit());
-					ditQuelquechose('Gagné !');
-					trouveLeFruit();
+					ditQuelquechose('Gagné !', trouveLeFruit);
 				} else {
 					ditQuelquechose('Perdu !');
 					changeScore(-1);
@@ -438,6 +441,8 @@ function trouveLeFruit() {
 		});
 	}
 }
+
+
 
 
 
