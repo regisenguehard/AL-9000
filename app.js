@@ -275,7 +275,6 @@ animauxBoxContent.forEach((element, index) => {
 
 
 // trouve Animal
-
 function trouveAnimal() {
 	let titre = document.querySelector('#chercheAnimal h2');
 	let box = document.querySelector('#chercheAnimal .animauxBox2');
@@ -344,7 +343,7 @@ function trouveLeLegume() {
 	
 	box.innerHTML = '';
 	let tableau = legumeBoxContent;
-	if (initJeu(legumeBoxContent, box)) {
+	if (initJeu(tableau, box)) {
 		let boxClickable = document.querySelectorAll('#chercheLeLegume .box.clickable');
 		let solution = getRandomInt(tableau.length);
 		let nomCapitalized = tableau[solution].voice.charAt(0).toUpperCase() + tableau[solution].voice.slice(1)
