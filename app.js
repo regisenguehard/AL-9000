@@ -73,7 +73,7 @@ function parle(str, fnctonend) {
 	annonce.lang = "fr-FR";
 	annonce.rate = 1;
 	synth.speak(annonce);
-//console.log(str, typeof fnctonend);
+console.log(str, annonce, typeof fnctonend);
 	if (fnctonend === undefined) {
 	} else {
 		annonce.onend = function(event) {
@@ -340,7 +340,7 @@ let legumeBoxContent = [
 function trouveLeLegume() {
 	let titre = document.querySelector('#chercheLeLegume h2');
 	let box = document.querySelector('#chercheLeLegume .legumeBox2');
-	
+
 	box.innerHTML = '';
 	let tableau = legumeBoxContent;
 	if (initJeu(tableau, box)) {
@@ -360,11 +360,13 @@ function trouveLeLegume() {
 				if (boxClickable[index].dataset.id == solution) {
 					changeScore(1);
 					ditQuelquechose('Gagné !', trouveLeLegume);
+					return true;
 				} else {
 					ditQuelquechose('Perdu !');
 					changeScore(-1);
 					boxClickable[index].removeEventListener('click', gagnePerdu, true);
 					boxClickable[index].classList.remove('clickable');
+					return false;
 				}
 			}
 		});
