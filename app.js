@@ -34,6 +34,13 @@ function initJeu(tableau, cibleHtml) {
 }
 
 
+// Splashscreen
+let splash = document.querySelector('.splash');
+splash.addEventListener('click', function(e) {
+	splash.classList.add('remove');
+});
+
+
 
 // Gestion du score
 let score = 0;
@@ -64,7 +71,6 @@ hamburger.addEventListener('click', function() {
 
 
 
-
 // Prépare la synthèse vocale en français
 let synth = window.speechSynthesis;
 
@@ -72,8 +78,9 @@ function parle(str, fnctonend) {
 	let annonce = new SpeechSynthesisUtterance(str);
 	annonce.lang = "fr-FR";
 	annonce.rate = 1;
+	// annonce.voice = 'Marie';
 	synth.speak(annonce);
-console.log(str, annonce, typeof fnctonend);
+console.log(str, annonce);
 	if (fnctonend === undefined) {
 	} else {
 		annonce.onend = function(event) {
@@ -86,7 +93,18 @@ function ditQuelquechose(str, fnctonend) {
 		synth.cancel();
 	}
 	parle(str, fnctonend);
+
+	// Debug
+	let langDefault = null;
+	synth.getVoices().forEach(elt => {
+		if (elt.default) {
+			let debug = document.getElementById("debug");
+			debug.innerHTML = elt.lang;
+			langDefault = elt.lang;
+		}
+	});
 }
+
 
 
 
@@ -249,6 +267,7 @@ let animauxBoxContent = [
 		{'image': 'animaux/taupe-nature-13298_640.jpg', 'sexe': 'la ', 'voice': 'taupe' },
 		{'image': 'animaux/tigre-tiger-1526704_640.png', 'sexe': 'le ', 'voice': 'tigre' },
 		{'image': 'animaux/crocodile-nile-crocodile-245013_640.jpg', 'sexe': 'le ', 'voice': 'crocodile' },
+		{'image': 'animaux/flamingo-7307672_640.jpg', 'sexe': 'le ', 'voice': 'flamant rose' },
 ];
 animauxBoxContent = shuffle(animauxBoxContent);
 let animauxBox = document.querySelector('.animauxBox1');
@@ -262,7 +281,11 @@ animauxBoxContent.forEach((element, index) => {
 
 	d = animauxBox.appendChild(box);
 	d.classList.add('box', 'box-'+index, 'clickable');
-	d.dataset.voice = element.voice;
+	if (element.sexe == "l'") {
+		d.dataset.voice = element.sexe + element.voice;
+	} else {
+		d.dataset.voice = element.sexe + ' ' + element.voice;
+	}
 	d.dataset.id = index;
 
 	box.addEventListener('click', event => {
@@ -286,7 +309,7 @@ function trouveAnimal() {
 		let solution = getRandomInt(tableau.length);
 		let nomCapitalized = tableau[solution].voice.charAt(0).toUpperCase() + tableau[solution].voice.slice(1)
 		titre.innerText = nomCapitalized;
-		s = 'Cherche ' + tableau[solution].sexe + tableau[solution].voice;
+		s = 'Clic sur ' + tableau[solution].sexe + tableau[solution].voice;
 		ditQuelquechose(s);
 		titre.addEventListener('click', event => {
 			ditQuelquechose(s);
@@ -348,7 +371,7 @@ function trouveLeLegume() {
 		let solution = getRandomInt(tableau.length);
 		let nomCapitalized = tableau[solution].voice.charAt(0).toUpperCase() + tableau[solution].voice.slice(1)
 		titre.innerText = nomCapitalized;
-		s = 'Cherche ' + tableau[solution].sexe + tableau[solution].voice;
+		s = 'Clic sur ' + tableau[solution].sexe + tableau[solution].voice;
 		ditQuelquechose(s);
 		titre.addEventListener('click', event => {
 			ditQuelquechose(s);
@@ -420,7 +443,7 @@ function trouveLeFruit() {
 		let solution = getRandomInt(tableau.length);
 		let nomCapitalized = tableau[solution].voice.charAt(0).toUpperCase() + tableau[solution].voice.slice(1)
 		titre.innerText = nomCapitalized;
-		s = 'Cherche ' + tableau[solution].sexe + tableau[solution].voice;
+		s = 'Clic sur ' + tableau[solution].sexe + tableau[solution].voice;
 		ditQuelquechose(s);
 		titre.addEventListener('click', event => {
 			ditQuelquechose(s);
@@ -472,27 +495,27 @@ console.log('solution', solutionText);
 	recopieMot.innerText = solutionText;
 	parle(solutionText);
 	recopieSaisie.focus();
-	console.log('fff');
 
 	recopieMot.addEventListener('click', event => {
 		ditQuelquechose(solutionText);
 	});
 
 	recopieSaisie.addEventListener('keyup', lecture);
+
+	function lecture() {
+		let nomTouche = event.key;
+		if (event.which >= 48 && event.which <= 90) {
+			parle(nomTouche);
+		}
+		console.log(solutionText, recopieSaisie.value)
+		if (solutionText == recopieSaisie.value) {
+			recopieSuivant.classList.add('show');
+		} else {
+			recopieSuivant.classList.remove('show');
+		}
+	}
 }
 
-function lecture() {
-	let nomTouche = event.key;
-	if (event.which >= 48 && event.which <= 90) {
-		parle(nomTouche);
-	}
-	console.log(solutionText, recopieSaisie.value, lePrenom.value)
-	if (solutionText == recopieSaisie.value) {
-		recopieSuivant.classList.add('show');
-	} else {
-		recopieSuivant.classList.remove('show');
-	}
-}
 
 // Crée le Service Worker
 // if ("serviceWorker" in navigator) {

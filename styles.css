@@ -94,6 +94,10 @@ h1 {
 	text-transform: uppercase;
 	font-size: 1.5rem;
 }
+h1 a {
+	color: #ffffff;
+	text-decoration: none;
+}
 h2 {
 	font-size: 1.25rem;
 }
@@ -108,6 +112,47 @@ em {
 }
 input {
 	font-size: 18px;
+}
+
+
+.splash {
+	position: fixed;
+	z-index: 9000;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: rgb(26, 122, 196);
+	color: #fff;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
+}
+.splash h1 {
+	font-size: 3rem;
+}
+.splash > * {
+	margin-bottom: 4rem;
+}
+.splash a {
+	color: #fff;
+	text-decoration: none;
+	border: 1px solid #fff;
+	padding: 1rem 2rem;
+	border-radius: 8px;
+	font-size: 1.5rem;
+	transition: 250ms;
+}
+.splash a:hover {
+	color: black;
+	border-color: black
+}
+.splash.remove {
+	display: none;
 }
 
 
@@ -142,26 +187,28 @@ nav.show {
 }
 nav ul {
 	display: flex;
-	flex-direction: column;
-	flex-wrap: nowrap;
-	justify-content: space-around;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: flex-start;
 	align-items: center;
-	align-content: center;
+	align-content: flex-start;
     height: 100%;
 }
 nav li {
 	font-size: 1.15rem;
-	padding: 0 0.375rem;
+	width: 40%;
+	margin: 1rem 5%;
 }
 @media screen and (max-width:640px) {
 	nav li {
-		font-size: 0.65rem;
 		padding: 0 0.175rem;
 	}
 }
 nav li a {
 	color: #fff;
 	text-decoration: none;
+	display: block;
+	padding: 1rem 0.375rem;
 }
 
 
@@ -190,20 +237,26 @@ nav li a {
 
 #copyright {
 	position: fixed;
+    z-index: 100;
 	right: 0;
 	bottom: 0;
 	left: 0;
 	text-align: center;
-	background-color: rgba(26, 122, 196, 0.25);
+	background-color: rgba(26, 122, 196, 0.75);
 	font-size: 0.675rem;
 	border-top: 1px solid rgba(26, 122, 196, 0.75);
 }
 #copyright,
 #copyright a {
-	color: rgb(26, 122, 196);
+	color: #ffffff;
 	text-decoration: none;
 }
-
+#copyright span {
+	position: absolute;
+	right: 0;
+	color: #ffffff;
+	padding: 0 0.5rem;
+}
 
 
 form {
@@ -347,9 +400,17 @@ input[type="submit"] {
 #recopie #recopieMot {
 	text-transform: uppercase;
 }
+#recopie img {
+	width: 100%;
+}
+#recopie #recopieSaisie {
+	text-transform: uppercase;
+}
 #recopie #recopieSuivant {
-	display: none;
+	/* display: none; */
+	visibility: hidden;
 }
 #recopie #recopieSuivant.show {
-	display: block;
+	/* display: block; */
+	visibility: visible;
 }
