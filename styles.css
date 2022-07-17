@@ -180,7 +180,7 @@ nav {
 	transform-origin: right;
 	background-color: rgb(26, 122, 196);
 	transition: 250ms;
-	overflow: hidden;
+	overflow: scroll;
 }
 nav.show {
 	transform: translateX(0);
@@ -207,8 +207,11 @@ nav li {
 nav li a {
 	color: #fff;
 	text-decoration: none;
-	display: block;
 	padding: 1rem 0.375rem;
+	display: flex;
+}
+nav li a .emoji {
+	padding-right: 0.5rem;
 }
 
 
@@ -322,18 +325,20 @@ input[type="submit"] {
 
 
 
-
+#clavier {
+	text-align: center;
+}
 #clavier .box {
 	border-radius: 6px;
-	width: 50px;
+	width: 46px;
 	height: 50px;
+	letter-spacing: 5px;
 	cursor: pointer;
 	background-color: rgba(26, 122, 196, 0.75);
 	border: 1px solid rgba(26, 122, 196, 1);
 	line-height: 50px;
 	margin: 0.5rem;
 	color: #fff;
-	text-align: center;
 	font-size: 1.5rem;
 	text-transform: uppercase;
 }

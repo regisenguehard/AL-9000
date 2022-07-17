@@ -201,6 +201,7 @@ document.addEventListener('keyup', event => {
 		if (event.which >= 48 && event.which <= 90) {
 			clavierBox.innerText = nomTouche;
 			parle(nomTouche);
+			clavierBox.value = '';
 		}
 	}
 });
@@ -487,8 +488,8 @@ function recopieLeMot() {
 	let recopieSuivant = document.querySelector('#recopie #recopieSuivant');
 	let solutionMot = getRandomInt(fruitBoxContent.length);
 	solutionText = fruitBoxContent[solutionMot].voice;
-// debugger;
-console.log('solution', solutionText);
+	// debugger;
+	console.log('solution', solutionText);
 	recopieSuivant.classList.remove('show');
 	recopieSaisie.value = '';
 	recopieImg.setAttribute('src', 'images/' + fruitBoxContent[solutionMot].image);
