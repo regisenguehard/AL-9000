@@ -166,6 +166,7 @@ function lanceVue(laVue) {
 	let legume = "chercheLeLegume";
 	let fruit = "chercheLeFruit";
 	let recopie = "recopie";
+	let clavier = "clavier";
 	if (laVue.substring(laVue.length - animal.length) == animal) {
 		trouveAnimal();
 		theScore.innerText = score;
@@ -177,6 +178,8 @@ function lanceVue(laVue) {
 		theScore.innerText = score;
 	} else if (laVue.substring(laVue.length - recopie.length) == recopie){
 		recopieLeMot();
+	} else if (laVue.substring(laVue.length - recopie.length) == clavier){
+		initClavier();
 	} else {
 		theScore.innerText = '';
 	}
@@ -216,6 +219,9 @@ alphabetBox.forEach((element, index) => {
 
 
 // clavier
+function initClavier() {
+	clavierBox.focus();
+}
 let clavierBox = document.querySelector('#clavier .box');
 document.addEventListener('keyup', event => {
 	let url = String(window.location);

@@ -233,6 +233,8 @@ nav li a .emoji {
 	text-align: center;
 	margin-top: 1rem;
 	margin-bottom: 1rem;
+	padding-left: 1rem;
+	padding-right: 1rem;
 	font-size: 1.25rem;
 	color: rgba(26, 122, 196, 1);
 }
@@ -341,6 +343,7 @@ input[type="submit"] {
 	color: #fff;
 	font-size: 1.5rem;
 	text-transform: uppercase;
+	text-align: center;
 }
 
 
