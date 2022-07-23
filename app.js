@@ -230,7 +230,7 @@ document.addEventListener('keyup', event => {
 });
 
 
-// Animaux
+// Lecture animaux
 let animauxBoxContent = [
 		{ 'image': 'animaux/perroquet-ara-3601194_640.jpg', 'sexe': 'le ', 'voice': 'perroquet' },
 		{ 'image': 'animaux/chat-cat-2083492_640.jpg', 'sexe': 'le ', 'voice': 'chat' },
@@ -321,7 +321,7 @@ animauxBoxContent.forEach((element, index) => {
 
 
 
-// trouve Animal
+// Découvrir les animaux
 function trouveAnimal() {
 	let titre = document.querySelector('#chercheAnimal h2');
 	let box = document.querySelector('#chercheAnimal .animauxBox2');
@@ -384,6 +384,34 @@ let legumeBoxContent = [
 	{ 'image': 'legumes/radis-6166443_640.jpg', 'sexe': 'les ', 'voice': 'radis'},
 	{ 'image': 'legumes/salade.jpg', 'sexe': 'la ', 'voice': 'salade'},
 ];
+// Lecture légumes
+legumeBoxContent = shuffle(legumeBoxContent);
+let legumeBox = document.querySelector('.legumeBox1');
+
+legumeBoxContent.forEach((element, index) => {
+	let box = document.createElement("li", {'class': 'box'+index});
+	let image = document.createElement("img", {'src': element.image});
+	image.setAttribute("src", 'images/' + element.image);
+	image.setAttribute("alt", element.voice);
+	let bi = box.appendChild(image);
+
+	d = legumeBox.appendChild(box);
+	d.classList.add('box', 'box-'+index, 'clickable');
+	if (element.sexe == "l'") {
+		d.dataset.voice = element.sexe + element.voice;
+	} else {
+		d.dataset.voice = element.sexe + ' ' + element.voice;
+	}
+	d.dataset.id = index;
+
+	box.addEventListener('click', event => {
+		ditQuelquechose(box.dataset.voice);
+	});
+});
+
+
+
+// Découvre les légumes
 function trouveLeLegume() {
 	let titre = document.querySelector('#chercheLeLegume h2');
 	let box = document.querySelector('#chercheLeLegume .legumeBox2');
