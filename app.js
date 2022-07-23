@@ -76,7 +76,7 @@ let synth = window.speechSynthesis;
 
 function parle(str, fnctonend) {
 	// Debug
-	let initLang = true;
+	const initLang = true;
 	if (initLang) {
 		let debug = document.getElementById("debug");
 		let nbLang = 0;
