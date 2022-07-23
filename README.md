@@ -19,3 +19,5 @@ Impossible d'utiliser `speak` s'il n'y a pas eu d'interaction utilisateur.
 * `synth.getVoices()` ne se charge pas de la même manière : synchrone/asynchrone.
 
 * `synth.getVoices().forEach(elt => { console.log(elt); });` retourne la liste des langues supportées. Une propriété `default` à `true` sur Chrome sélectionne la langue française mais est renseignée à `false` sur Firefox alors que sur Safari, elles sont toutes renseignée à `true`.
+
+* La propriété `default` est en lecture seule : https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisVoice/default

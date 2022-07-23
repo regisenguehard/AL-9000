@@ -75,12 +75,45 @@ hamburger.addEventListener('click', function() {
 let synth = window.speechSynthesis;
 
 function parle(str, fnctonend) {
+	// Debug
+	let initLang = true;
+	if (initLang) {
+		let debug = document.getElementById("debug");
+		let nbLang = 0;
+		synth.getVoices().forEach(elt => {
+			if (elt.default) {
+				nbLang++;
+				debug.innerHTML = elt.lang + ' - ' + nbLang;
+			}
+		});
+		if (nbLang == 0) {
+			debug.innerHTML = '0 voix';
+		}
+		if (nbLang == 0) {
+			debug.innerHTML = '∞ voix';
+		}
+/*
+		// Set default language for
+		if (nbLang != 1) {
+			synth.getVoices().forEach(elt => {
+				if (elt.lang == 'fr-FR') {
+					elt.default = true;
+					console.log(elt);
+				} else {
+					elt.default = false;
+				}
+			});
+			// console.log(synth.getVoices());
+		}
+*/
+	}
+
 	let annonce = new SpeechSynthesisUtterance(str);
 	annonce.lang = "fr-FR";
 	annonce.rate = 1;
 	// annonce.voice = 'Marie';
 	synth.speak(annonce);
-console.log(str, annonce);
+
 	if (fnctonend === undefined) {
 	} else {
 		annonce.onend = function(event) {
@@ -93,16 +126,6 @@ function ditQuelquechose(str, fnctonend) {
 		synth.cancel();
 	}
 	parle(str, fnctonend);
-
-	// Debug
-	let langDefault = null;
-	synth.getVoices().forEach(elt => {
-		if (elt.default) {
-			let debug = document.getElementById("debug");
-			debug.innerHTML = elt.lang;
-			langDefault = elt.lang;
-		}
-	});
 }
 
 
